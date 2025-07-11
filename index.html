@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    If you are serving your web app in a path other than the root, change the
+    href value below to reflect the base path you are serving from.
+
+    The path provided below has to start and end with a slash "/" in order for
+    it to work correctly.
+
+    For more details:
+    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
+
+    This is a placeholder for base href that will be replaced by the value of
+    the `--base-href` argument provided to `flutter build`.
+  -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Fresh Style Russia - AI поиск артистов">
+
+  <!-- Кэш-контроль для Telegram Web App -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  
+  <!-- Версия приложения для принудительного обновления -->
+  <meta name="app-version" content="1.0.1">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="FSR">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <!-- Подключаем Telegram Web App JS с версионированием -->
+  <script src="https://telegram.org/js/telegram-web-app.js?v=1.0.1"></script>
+
+  <title>Fresh Style Russia</title>
+  <link rel="manifest" href="manifest.json">
+  
+  <style>
+    /* Принудительное обновление кэша */
+    body {
+      margin: 0;
+      padding: 0;
+    }
+    
+    /* Скрываем загрузочный экран после загрузки */
+    .loading {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <!-- Загрузочный экран -->
+  <div id="loading" style="
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: #000;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    flex-direction: column;
+  ">
+    <div style="display: flex; flex-direction: column; align-items: flex-start;">
+      <span id="fresh-word" style="
+        opacity: 0;
+        font-family: 'NauryzKeds', sans-serif;
+        font-size: 48px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        transition: opacity 0.5s;
+        text-align: left;
+      ">
+        <span style="color: #fff;">F</span><span style="color: #bbb;">RESH</span>
+      </span>
+      <span id="style-word" style="
+        opacity: 0;
+        font-family: 'NauryzKeds', sans-serif;
+        font-size: 48px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        position: relative;
+        right: -120px;
+        transition: right 0.5s, opacity 0.3s;
+        text-align: left;
+      ">
+        <span style="color: #fff;">S</span><span style="color: #bbb;">TYLE</span>
+      </span>
+      <span id="russia-word" style="
+        opacity: 0;
+        font-family: 'NauryzKeds', sans-serif;
+        font-size: 48px;
+        font-weight: bold;
+        letter-spacing: 2px;
+        margin-bottom: 8px;
+        display: inline-block;
+        transform: scale(0.7) translateY(-60px) rotate(-8deg);
+        transition: transform 0.18s cubic-bezier(.68,-0.55,.27,1.55), opacity 0.18s;
+        text-align: left;
+      ">
+        <span style="color: #fff;">R</span><span style="color: #bbb;">USSIA</span>
+      </span>
+    </div>
+  </div>
+  
+  <style>
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+
+  <script>
+    // Принудительное обновление кэша
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.getRegistrations().then(function(registrations) {
+        for(let registration of registrations) {
+          registration.unregister();
+        }
+      });
+    }
+    
+    // Очистка кэша
+    if ('caches' in window) {
+      caches.keys().then(function(names) {
+        for (let name of names) {
+          caches.delete(name);
+        }
+      });
+    }
+    
+    // Скрываем загрузочный экран после загрузки Flutter
+    window.addEventListener('load', function() {
+      setTimeout(function() {
+        document.getElementById('loading').style.display = 'none';
+      }, 2000);
+    });
+
+    function animateWords() {
+      const fresh = document.getElementById('fresh-word');
+      const style = document.getElementById('style-word');
+      const russia = document.getElementById('russia-word');
+      fresh.style.opacity = 0;
+      style.style.opacity = 0;
+      style.style.right = '-120px';
+      russia.style.opacity = 0;
+      russia.style.transform = 'scale(0.7) translateY(-60px) rotate(-8deg)';
+      setTimeout(() => {
+        fresh.style.opacity = 1;
+      }, 500);
+      setTimeout(() => {
+        style.style.opacity = 1;
+        style.style.right = '0px';
+      }, 1100);
+      setTimeout(() => {
+        russia.style.opacity = 1;
+        russia.style.transform = 'scale(1) translateY(0) rotate(0deg)';
+      }, 1600);
+      setTimeout(() => {
+        fresh.style.opacity = 0;
+        style.style.opacity = 0;
+        style.style.right = '-120px';
+        russia.style.opacity = 0;
+        russia.style.transform = 'scale(0.7) translateY(-60px) rotate(-8deg)';
+      }, 2600);
+    }
+    let loaderInterval = setInterval(animateWords, 2700);
+    animateWords();
+  </script>
+  
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>
